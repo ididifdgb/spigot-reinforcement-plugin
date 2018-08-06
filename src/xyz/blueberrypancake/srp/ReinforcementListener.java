@@ -2,9 +2,11 @@ package xyz.blueberrypancake.srp;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +15,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Chest;
 
 public class ReinforcementListener implements Listener {
 
@@ -39,14 +42,24 @@ public class ReinforcementListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         Location loc = new Location(null, block.getX(), block.getY(), block.getZ());
+        Player player = event.getPlayer();
         Reinforcement r = rmap.get(loc);
+
+        boolean mode = command.getReinforcementMode(player);
+
+        if (mode) {
+            player.sendMessage(ChatColor.AQUA + "Disabled reinforcement mode.");
+            command.disableReinforcementMode(player);
+            event.setCancelled(true);
+            return;
+        }
+
         if (r != null) {
             r.decreaseStrength();
             if (r.getStrength() > 0) {
                 event.setCancelled(true);
-                Player player = event.getPlayer();
                 if (player != null) {
-                    player.sendMessage("\u00A76" + r.getStrength() + " hits left.");
+                    player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
                 }
             } else {
                 rmap.remove(loc);
@@ -61,6 +74,7 @@ public class ReinforcementListener implements Listener {
         if (action != Action.LEFT_CLICK_AIR && action != Action.RIGHT_CLICK_AIR) {
             Player player = event.getPlayer();
             Block block = event.getClickedBlock();
+
             boolean mode = command.getReinforcementMode(player);
 
             if (mode) {
@@ -69,12 +83,12 @@ public class ReinforcementListener implements Listener {
 
             Location loc = new Location(null, block.getX(), block.getY(), block.getZ());
             if (action == Action.LEFT_CLICK_BLOCK) {
+                Reinforcement r = rmap.get(loc);
                 if (mode) {
-                    Reinforcement r = rmap.get(loc);
                     if (r != null) {
-                        player.sendMessage("\u00A76" + r.getStrength() + " hits left.");
+                        player.sendMessage(ChatColor.GOLD + "" + r.getStrength() + " hits left.");
                     } else {
-                        player.sendMessage("\u00A7cThis block is not reinforced.");
+                        player.sendMessage(ChatColor.RED + "This block is not reinforced.");
                     }
                 }
             } else if (action == Action.RIGHT_CLICK_BLOCK) {
@@ -86,12 +100,18 @@ public class ReinforcementListener implements Listener {
                     }
                 } else {
                     Reinforcement r = rmap.get(loc);
+
                     if (r != null) {
-                        event.setCancelled(true);
+                        onLocked(event, player, block);
                     }
                 }
             }
         }
+    }
+
+    private void onLocked(PlayerInteractEvent event, Player player, Block block) {
+        event.setCancelled(true);
+        player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
     }
 
     private void reinforce(Location loc, Player player, ItemStack held) {
@@ -106,15 +126,15 @@ public class ReinforcementListener implements Listener {
                         newReinforcement);
                 held.setAmount(Math.max(0, held.getAmount() - 1));
                 player.getInventory().setItemInMainHand(held);
-                player.sendMessage("\u00A7aBlock reinforced.");
+                player.sendMessage(ChatColor.GREEN + "Block reinforced.");
             } else if (actualReinforcement != null && actualReinforcement.getStrength() == strength) {
-                player.sendMessage("\u00A7bBlock already fully reinforced!");
+                player.sendMessage(ChatColor.AQUA + "Block already fully reinforced!");
             }
         }
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        command.resetPlayerState(event.getPlayer()); // Reset their "reinforce" state
+        command.disableReinforcementMode(event.getPlayer()); // Reset their "reinforce" state
     }
 }

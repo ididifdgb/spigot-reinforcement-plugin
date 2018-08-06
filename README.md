@@ -1,6 +1,12 @@
 # Spigot Reinforcement Plugin
 A Spigot Reinforcement Plugin for 1.13 inspired by Civcraft. You can reinforce after enabling the mode using `/reinforce` and right clicking on the blocks.
 
+# How it works
+
+There are three levels of reinforcement: stone (250), iron (750), or diamond (1800). Type `/reinforce` and to toggle reinforcement mode and left click to determine the remaining strength of the block being hit. Right clicking while holding one of the reinforcement materials in your main hand will reinforce a block instead.
+
+Note that you cannot damage blocks while in reinforcement mode.
+
 # File format
 The `reinforcement_overworld.srpdata` file is structured as a series of `[x y z strength group_id]` structs encoded in binary taking up 16 bytes of space per block to denote reinforcements. One file exists for each dimension. The groups.srpdata file is a human-readable file just denoting which user belongs to which group.
 

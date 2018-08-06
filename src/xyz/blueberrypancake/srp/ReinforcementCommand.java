@@ -2,6 +2,7 @@ package xyz.blueberrypancake.srp;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,21 +20,21 @@ public class ReinforcementCommand implements CommandExecutor {
             players.put(player.getDisplayName(), !enabled);
 
             if (!enabled) {
-                player.sendMessage("\u00A7aReinforcement mode enabled!");
+                player.sendMessage(ChatColor.GREEN + "Reinforcement mode enabled!");
             } else {
-                player.sendMessage("\u00A7cReinforcement mode disabled!");
+                player.sendMessage(ChatColor.RED + "Reinforcement mode disabled!");
             }
         }
 
         return true;
     }
 
-    public void resetPlayerState(Player player) {
-        players.put(player.getDisplayName(), false);
-    }
-
     public boolean getReinforcementMode(Player player) {
         return players.getOrDefault(player.getDisplayName(), false);
+    }
+    
+    public void disableReinforcementMode(Player player) {
+        players.put(player.getDisplayName(), false);
     }
 
 }
