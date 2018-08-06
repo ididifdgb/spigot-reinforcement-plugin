@@ -29,12 +29,6 @@ public class ReinforcementPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("Dumped reinforcement data onDisable() called!");
         overworld.dumpReinforcements(new ArrayList<Reinforcement>(rmap.values())); // Dump the reinforcement data to disk
     }
-
-    @Override
-    public void onLoad() {
-    }
-
 }

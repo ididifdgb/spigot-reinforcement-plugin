@@ -39,8 +39,7 @@ public class SRPFile {
         return true;
     }
 
-    // Read the .srp file from disk and if it doesn't exist, create it, then read
-    // into the byte array
+    // Read the .srp file from disk and if it doesn't exist, create it, then read into the byte array
     public boolean readFromDisk() throws IOException {
         if (!createFile()) {
             System.out.println("Problem creating file");
@@ -113,6 +112,7 @@ public class SRPFile {
             System.out.println("Error writing reinforcement data to disk! Length:" + reinforcements.size());
             return false;
         }
+        
         return true;
     }
 

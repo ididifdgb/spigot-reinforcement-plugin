@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +14,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Chest;
 
 public class ReinforcementListener implements Listener {
 
@@ -34,7 +32,7 @@ public class ReinforcementListener implements Listener {
 
     private void initMaterialMap() {
         mmap.put(Material.STONE, (short) 250);
-        mmap.put(Material.IRON_INGOT, (short) 250);
+        mmap.put(Material.IRON_INGOT, (short) 750);
         mmap.put(Material.DIAMOND, (short) 1800);
     }
 
@@ -82,8 +80,8 @@ public class ReinforcementListener implements Listener {
             }
 
             Location loc = new Location(null, block.getX(), block.getY(), block.getZ());
+            Reinforcement r = rmap.get(loc);
             if (action == Action.LEFT_CLICK_BLOCK) {
-                Reinforcement r = rmap.get(loc);
                 if (mode) {
                     if (r != null) {
                         player.sendMessage(ChatColor.GOLD + "" + r.getStrength() + " hits left.");
@@ -96,11 +94,9 @@ public class ReinforcementListener implements Listener {
                     // try to reinforce the block
                     ItemStack held = player.getInventory().getItemInMainHand();
                     if (held != null) {
-                        reinforce(loc, player, held);
+                        attemptReinforce(r, loc, player, held);
                     }
                 } else {
-                    Reinforcement r = rmap.get(loc);
-
                     if (r != null) {
                         onLocked(event, player, block);
                     }
@@ -114,16 +110,13 @@ public class ReinforcementListener implements Listener {
         player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
     }
 
-    private void reinforce(Location loc, Player player, ItemStack held) {
+    private void attemptReinforce(Reinforcement actualReinforcement, Location loc, Player player, ItemStack held) {
         Material m = held.getType();
         short strength = mmap.getOrDefault(m, (short) -1);
         if (strength > -1) {
-            Reinforcement actualReinforcement = rmap.get(loc);
-
             if (actualReinforcement == null || actualReinforcement.getStrength() < strength) {
                 Reinforcement newReinforcement = new Reinforcement(loc, strength, (short) 1);
-                rmap.put(new Location(null, newReinforcement.getX(), newReinforcement.getY(), newReinforcement.getZ()),
-                        newReinforcement);
+                rmap.put(new Location(null, newReinforcement.getX(), newReinforcement.getY(), newReinforcement.getZ()), newReinforcement);
                 held.setAmount(Math.max(0, held.getAmount() - 1));
                 player.getInventory().setItemInMainHand(held);
                 player.sendMessage(ChatColor.GREEN + "Block reinforced.");

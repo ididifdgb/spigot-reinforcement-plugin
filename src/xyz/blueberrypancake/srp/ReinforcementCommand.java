@@ -25,7 +25,6 @@ public class ReinforcementCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "Reinforcement mode disabled!");
             }
         }
-
         return true;
     }
 
@@ -36,5 +35,4 @@ public class ReinforcementCommand implements CommandExecutor {
     public void disableReinforcementMode(Player player) {
         players.put(player.getDisplayName(), false);
     }
-
 }

@@ -51,8 +51,7 @@ public class Reinforcement {
     }
 
     public String toString() {
-        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:"
-                + this.strength + ")";
+        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ")";
     }
 
     public byte[] toBytes() {
