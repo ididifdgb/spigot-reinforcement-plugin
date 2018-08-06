@@ -1,0 +1,8 @@
+name: ReinforcementPlugin
+main: xyz.blueberrypancake.srp.ReinforcementPlugin
+version: 1.0
+api-version: 1.13
+commands:
+    reinforce:
+        description: Enable/disable reinforcement mode. Left click tells you the strength remaining on a block and right clicking will allow you to reinforce with the appropriate material.
+        usage: /reinforce

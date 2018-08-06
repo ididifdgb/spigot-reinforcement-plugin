@@ -1,21 +1,40 @@
 package xyz.blueberrypancake.srp;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReinforcementPlugin extends JavaPlugin {
 
-	@Override
-	public void onEnable() {
-		
-	}
+    private SRPFile overworld = new SRPFile("overworld");
 
-	@Override
-	public void onDisable() {
-		
-	}
-	
-	@Override
-	public void onLoad() {
-		
-	}
+    private HashMap<Location, Reinforcement> rmap;
+
+    private ReinforcementCommand command = new ReinforcementCommand();
+
+    @Override
+    public void onEnable() {
+        try {
+            overworld.readFromDisk(); // Make sure we read our reinforcement data from disk first
+            rmap = overworld.getReinforcements(); // Get the map associated with the reinforcement data
+            this.getCommand("reinforce").setExecutor(command);
+            getServer().getPluginManager().registerEvents(new ReinforcementListener(rmap, command), this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        System.out.println("Dumped reinforcement data onDisable() called!");
+        overworld.dumpReinforcements(new ArrayList<Reinforcement>(rmap.values())); // Dump the reinforcement data to disk
+    }
+
+    @Override
+    public void onLoad() {
+    }
+
 }
