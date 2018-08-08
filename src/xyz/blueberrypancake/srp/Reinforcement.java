@@ -6,7 +6,7 @@ import org.bukkit.Location;
 
 public class Reinforcement {
 
-    public static final int STRUCT_SIZE = 16;
+    public static final int STRUCT_SIZE = 18;
 
     private int x;
     private int y;
@@ -15,8 +15,15 @@ public class Reinforcement {
     private short group_id;
     private short dimension;
     
-    Reinforcement(Location loc, short strength, short dimension, short group_id) {
+    Reinforcement(Location loc, short strength, short group_id, short dimension) {
         this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, dimension);
+    }
+    
+    Reinforcement(int x, int y, int z, short dimension) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = dimension;
     }
 
     Reinforcement(int x, int y, int z, short strength, short group_id, short dimension) {
@@ -57,7 +64,12 @@ public class Reinforcement {
     }
 
     public String toString() {
-        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + "dimension:" + this.dimension + ")";
+        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ",dimension:" + this.dimension + ")";
+    }
+    
+    // hash based on x,y,z,d instead of the full 6-tuple
+    public int hashCode() {
+        return  ("(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",dimension:" + this.dimension).hashCode();
     }
 
     public byte[] toBytes() {

@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReinforcementPlugin extends JavaPlugin {
 
     private SRPFile overworld = new SRPFile("reinforcements");
 
-    private HashMap<Location, Reinforcement> rmap;
+    private HashMap<Integer, Reinforcement> rmap;
 
     private ReinforcementCommand command = new ReinforcementCommand();
 

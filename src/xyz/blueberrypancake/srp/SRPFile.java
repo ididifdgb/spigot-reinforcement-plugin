@@ -8,8 +8,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Location;
-
 public class SRPFile {
 
     private byte[] bytes = null;
@@ -18,7 +16,7 @@ public class SRPFile {
     private File file;
 
     SRPFile(String dimension) {
-        this.filename = "reinforcement_" + dimension + ".srp";
+        this.filename = dimension + ".srp";
     }
 
     private boolean createFile() throws IOException {
@@ -76,8 +74,8 @@ public class SRPFile {
     }
 
     // Get the reinforcements associated with this byte array as a HashMap
-    public HashMap<Location, Reinforcement> getReinforcements() {
-        HashMap<Location, Reinforcement> reinforcements = new HashMap<Location, Reinforcement>();
+    public HashMap<Integer, Reinforcement> getReinforcements() {
+        HashMap<Integer, Reinforcement> reinforcements = new HashMap<Integer, Reinforcement>();
 
         if (this.bytes.length < Reinforcement.STRUCT_SIZE) {
             return reinforcements;
@@ -91,7 +89,7 @@ public class SRPFile {
         for (int i = 0; i < this.bytes.length / Reinforcement.STRUCT_SIZE; i++) {
             // Add a reinforcement from the buffer
             Reinforcement r = new Reinforcement(buffer.getInt(), buffer.getInt(), buffer.getInt(), buffer.getShort(), buffer.getShort(), buffer.getShort());
-            reinforcements.put(new Location(null, r.getX(), r.getY(), r.getZ()), r);
+            reinforcements.put(r.hashCode(), r);
         }
 
         return reinforcements;
@@ -100,6 +98,7 @@ public class SRPFile {
     // Dump the reinforcements array (in memory) to bytes and write to disk
     public boolean dumpReinforcements(ArrayList<Reinforcement> reinforcements) {
         ByteBuffer buffer = ByteBuffer.allocate(Reinforcement.STRUCT_SIZE * reinforcements.size());
+        
         for (Reinforcement r : reinforcements) {
             buffer.put(r.toBytes());
         }

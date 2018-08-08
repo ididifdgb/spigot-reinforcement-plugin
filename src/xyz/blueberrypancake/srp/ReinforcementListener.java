@@ -17,31 +17,31 @@ import org.bukkit.inventory.ItemStack;
 
 public class ReinforcementListener implements Listener {
 
-    private HashMap<Location, Reinforcement> rmap;
+    private HashMap<Integer, Reinforcement> refMap;
+    private HashMap<Material, Short> matMap;
+    
     private ReinforcementCommand command;
 
-    private HashMap<Material, Short> mmap;
-
-    ReinforcementListener(HashMap<Location, Reinforcement> rmap, ReinforcementCommand command) {
-        this.rmap = rmap;
-        this.mmap = new HashMap<Material, Short>();
+    ReinforcementListener(HashMap<Integer, Reinforcement> refMap, ReinforcementCommand command) {
+        this.refMap = refMap;
+        this.matMap = new HashMap<Material, Short>();
         this.command = command;
 
         this.initMaterialMap();
     }
 
     private void initMaterialMap() {
-        mmap.put(Material.STONE, (short) 250);
-        mmap.put(Material.IRON_INGOT, (short) 750);
-        mmap.put(Material.DIAMOND, (short) 1800);
+        matMap.put(Material.STONE, (short) 250);
+        matMap.put(Material.IRON_INGOT, (short) 750);
+        matMap.put(Material.DIAMOND, (short) 1800);
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        Location loc = new Location(null, block.getX(), block.getY(), block.getZ());
         Player player = event.getPlayer();
-        Reinforcement r = rmap.get(loc);
+        Reinforcement lookup = new Reinforcement(block.getX(), block.getY(), block.getZ(), (short) player.getWorld().getEnvironment().ordinal());
+        Reinforcement ref = refMap.get(lookup.hashCode());
 
         boolean mode = command.getReinforcementMode(player);
 
@@ -52,15 +52,15 @@ public class ReinforcementListener implements Listener {
             return;
         }
 
-        if (r != null) {
-            r.decreaseStrength();
-            if (r.getStrength() > 0) {
+        if (ref != null) {
+            ref.decreaseStrength();
+            if (ref.getStrength() > 0) {
                 event.setCancelled(true);
                 if (player != null) {
                     player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
                 }
             } else {
-                rmap.remove(loc);
+                refMap.remove(lookup.hashCode());
             }
         }
     }
@@ -79,12 +79,13 @@ public class ReinforcementListener implements Listener {
                 event.setCancelled(true);
             }
 
-            Location loc = new Location(null, block.getX(), block.getY(), block.getZ());
-            Reinforcement r = rmap.get(loc);
+            Reinforcement lookup = new Reinforcement(block.getX(), block.getY(), block.getZ(), (short) player.getWorld().getEnvironment().ordinal());
+            Reinforcement ref = refMap.get(lookup.hashCode());
+            
             if (action == Action.LEFT_CLICK_BLOCK) {
                 if (mode) {
-                    if (r != null) {
-                        player.sendMessage(ChatColor.GOLD + "" + r.getStrength() + " hits left.");
+                    if (ref != null) {
+                        player.sendMessage(ChatColor.GOLD + "" + ref.getStrength() + " hits left.");
                     } else {
                         player.sendMessage(ChatColor.RED + "This block is not reinforced.");
                     }
@@ -94,10 +95,10 @@ public class ReinforcementListener implements Listener {
                     // try to reinforce the block
                     ItemStack held = player.getInventory().getItemInMainHand();
                     if (held != null) {
-                        attemptReinforce(r, loc, player, held);
+                        attemptReinforce(ref, block.getLocation(), player, held);
                     }
                 } else {
-                    if (r != null) {
+                    if (ref != null) {
                         onLocked(event, player, block);
                     }
                 }
@@ -112,12 +113,11 @@ public class ReinforcementListener implements Listener {
 
     private void attemptReinforce(Reinforcement actualReinforcement, Location loc, Player player, ItemStack held) {
         Material m = held.getType();
-        short strength = mmap.getOrDefault(m, (short) -1);
+        short strength = matMap.getOrDefault(m, (short) -1);
         if (strength > -1) {
             if (actualReinforcement == null || actualReinforcement.getStrength() < strength) {
-                Reinforcement newReinforcement = new Reinforcement(loc, strength, (short) 1, (short) player.getWorld().getEnvironment().ordinal()); // wip: actual group ids
-                // wip: improve hashing to use world id instead
-                rmap.put(new Location(null, newReinforcement.getX(), newReinforcement.getY(), newReinforcement.getZ()), newReinforcement);
+                Reinforcement newRef = new Reinforcement(loc, strength, (short) 1, (short) player.getWorld().getEnvironment().ordinal()); // wip: actual group ids
+                refMap.put(newRef.hashCode(), newRef);
                 held.setAmount(Math.max(0, held.getAmount() - 1));
                 player.getInventory().setItemInMainHand(held);
                 player.sendMessage(ChatColor.GREEN + "Block reinforced.");
