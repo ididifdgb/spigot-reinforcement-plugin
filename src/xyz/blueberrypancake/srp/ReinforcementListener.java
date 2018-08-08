@@ -115,7 +115,8 @@ public class ReinforcementListener implements Listener {
         short strength = mmap.getOrDefault(m, (short) -1);
         if (strength > -1) {
             if (actualReinforcement == null || actualReinforcement.getStrength() < strength) {
-                Reinforcement newReinforcement = new Reinforcement(loc, strength, (short) 1);
+                Reinforcement newReinforcement = new Reinforcement(loc, strength, (short) 1, (short) player.getWorld().getEnvironment().ordinal()); // wip: actual group ids
+                // wip: improve hashing to use world id instead
                 rmap.put(new Location(null, newReinforcement.getX(), newReinforcement.getY(), newReinforcement.getZ()), newReinforcement);
                 held.setAmount(Math.max(0, held.getAmount() - 1));
                 player.getInventory().setItemInMainHand(held);

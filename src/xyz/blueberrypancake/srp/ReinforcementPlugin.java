@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReinforcementPlugin extends JavaPlugin {
 
-    private SRPFile overworld = new SRPFile("overworld");
+    private SRPFile overworld = new SRPFile("reinforcements");
 
     private HashMap<Location, Reinforcement> rmap;
 

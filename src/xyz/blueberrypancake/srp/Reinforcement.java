@@ -13,17 +13,19 @@ public class Reinforcement {
     private int z;
     private short strength;
     private short group_id;
-
-    Reinforcement(Location loc, short strength, short group_id) {
-        this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id);
+    private short dimension;
+    
+    Reinforcement(Location loc, short strength, short dimension, short group_id) {
+        this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, dimension);
     }
 
-    Reinforcement(int x, int y, int z, short strength, short group_id) {
+    Reinforcement(int x, int y, int z, short strength, short group_id, short dimension) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.strength = strength;
         this.group_id = group_id;
+        this.dimension = dimension;
     }
 
     public void decreaseStrength() {
@@ -49,9 +51,13 @@ public class Reinforcement {
     public short getGroupID() {
         return this.group_id;
     }
+    
+    public short getDimension() {
+        return this.dimension;
+    }
 
     public String toString() {
-        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ")";
+        return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + "dimension:" + this.dimension + ")";
     }
 
     public byte[] toBytes() {
@@ -61,6 +67,7 @@ public class Reinforcement {
         bytes.putInt(this.z);
         bytes.putShort(this.strength);
         bytes.putShort(this.group_id);
+        bytes.putShort(this.dimension);
         return bytes.array();
     }
 }
