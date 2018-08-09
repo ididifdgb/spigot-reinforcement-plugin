@@ -3,9 +3,12 @@ package xyz.blueberrypancake.srp;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.Chest.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,9 +41,22 @@ public class ReinforcementListener implements Listener {
     }
 
     private void initMaterialMap() {
-        matMap.put(Material.STONE, (short) 250);
+        matMap.put(Material.STONE, (short) 1);
         matMap.put(Material.IRON_INGOT, (short) 750);
         matMap.put(Material.DIAMOND, (short) 1800);
+    }
+    
+    private Material getMaterialFromID(byte id) {
+        int i = 0;
+        for(Material m : matMap.keySet()) {
+            if((byte)i == id) {
+                return m;
+            }
+            i++;
+        }
+        
+        // lol?
+        return null;
     }
 
     @EventHandler
@@ -48,8 +64,9 @@ public class ReinforcementListener implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
         
-        String key = Reinforcement.getKey(block, (short) player.getWorld().getEnvironment().ordinal());
-        Reinforcement ref = refMap.get(key);
+        byte dimension = (byte) player.getWorld().getEnvironment().ordinal();
+        String key = Reinforcement.getKey(block, dimension);
+        Reinforcement ref = getReinforcementAt(block, player, dimension);
 
         boolean mode = command.getReinforcementMode(player);
 
@@ -60,6 +77,7 @@ public class ReinforcementListener implements Listener {
             return;
         }
 
+        // Attempt to damage the reinforcement
         if (ref != null) {
             ref.decreaseStrength();
             if (ref.getStrength() > 0) {
@@ -68,9 +86,50 @@ public class ReinforcementListener implements Listener {
                     player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
                 }
             } else {
+                // Reinforcement is destroyed, drop an item and remove it
+                Material material = getMaterialFromID(ref.getMaterial());
+                if(material != null) {
+                    player.getWorld().dropItem(block.getLocation(), new ItemStack(material));
+                }
                 refMap.remove(key);
             }
         }
+    }
+    
+    private Chest getChest(Block block) {
+        BlockData data = block.getBlockData();
+        if(data instanceof Chest) {
+            return (Chest) data;
+        }
+        return null;
+    }
+    
+    // Gets a reinforcement at a position in world (special case for chests)
+    private Reinforcement getReinforcementAt(Block block, Player player, byte dimension) {
+        String key = Reinforcement.getKey(block, dimension);
+        Reinforcement ref = refMap.get(key);
+        
+        if(ref == null) {
+            Chest chest = getChest(block);
+            boolean isDoubleChest = chest != null && chest.getType() != Type.SINGLE;
+            
+            if(isDoubleChest) { 
+                BlockFace facing = chest.getFacing();
+                Block other = null;
+                
+                if(facing == BlockFace.EAST || facing == BlockFace.WEST) {
+                    int dz = (facing == BlockFace.EAST ? 1 : -1 ) * (chest.getType() == Type.LEFT ? 1 : -1);
+                    other = player.getWorld().getBlockAt(block.getX(), block.getY(), block.getZ() + dz);
+                } else if(facing == BlockFace.NORTH || facing == BlockFace.SOUTH) {
+                    int dx = (facing == BlockFace.SOUTH ? 1 : -1 ) * (chest.getType() == Type.LEFT ? -1 : 1);
+                    other = player.getWorld().getBlockAt(block.getX() + dx, block.getY(), block.getZ());
+                }
+                
+                ref = refMap.get(Reinforcement.getKey(other, dimension));
+            }
+        }
+        
+        return ref;
     }
 
     @EventHandler
@@ -80,16 +139,18 @@ public class ReinforcementListener implements Listener {
         if (action != Action.LEFT_CLICK_AIR && action != Action.RIGHT_CLICK_AIR) {
             Player player = event.getPlayer();
             Block block = event.getClickedBlock();
-
+            
             boolean mode = command.getReinforcementMode(player);
 
+            // Todo: if they're not the owner, cancel it, else allow and return 
             if (mode) {
                 event.setCancelled(true);
             }
-
-            String key = Reinforcement.getKey(block, (short) player.getWorld().getEnvironment().ordinal());
-            Reinforcement ref = refMap.get(key);
             
+            byte dimension = (byte) player.getWorld().getEnvironment().ordinal();
+            Reinforcement ref = getReinforcementAt(block, player, dimension);
+            
+            // Info mode
             if (action == Action.LEFT_CLICK_BLOCK) {
                 if (mode) {
                     if (ref != null) {
@@ -98,14 +159,15 @@ public class ReinforcementListener implements Listener {
                         player.sendMessage(ChatColor.RED + "This block is not reinforced.");
                     }
                 }
+            // Reinforce mode
             } else if (action == Action.RIGHT_CLICK_BLOCK) {
                 if (mode) {
-                    // try to reinforce the block
+                    // Try to reinforce the block using their held item
                     ItemStack held = player.getInventory().getItemInMainHand();
                     if (held != null) {
-                        attemptReinforce(ref, block.getLocation(), player, held);
+                        attemptReinforce(ref, block, player, held);
                     }
-                } else {
+                } else { // Interacting with the block, try to see if it's locked
                     if (ref != null) {
                         onLocked(event, player, block);
                     }
@@ -118,17 +180,28 @@ public class ReinforcementListener implements Listener {
         event.setCancelled(true);
         player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
     }
-
-    private void attemptReinforce(Reinforcement actualReinforcement, Location location, Player player, ItemStack held) {
+    
+    private void reinforce(Block block, short strength, byte material, byte dimension) {
+        Reinforcement newRef = new Reinforcement(block.getLocation(), strength, (short) 1, material, dimension); // wip: actual group ids
+        refMap.put(Reinforcement.getKey(block.getLocation(), newRef.getDimension()), newRef);        
+    }
+    
+    // Reinforce a (single) block
+    private void attemptReinforce(Reinforcement actualReinforcement, Block block, Player player, ItemStack held) {
         Material m = held.getType();
         short strength = matMap.getOrDefault(m, (short) -1);
         if (strength > -1) {
+            // Reinforcement doesn't exist or it's weak
             if (actualReinforcement == null || actualReinforcement.getStrength() < strength) {
-                Reinforcement newRef = new Reinforcement(location, strength, (short) 1, (short) player.getWorld().getEnvironment().ordinal()); // wip: actual group ids
-                refMap.put(Reinforcement.getKey(location, newRef.getDimension()), newRef);
+                // Reinforce the single block
+                reinforce(block, strength, (byte) (m.ordinal() % matMap.size()), (byte) player.getWorld().getEnvironment().ordinal());
+                
+                // Use up the reinforcement material
                 held.setAmount(Math.max(0, held.getAmount() - 1));
                 player.getInventory().setItemInMainHand(held);
+                
                 player.sendMessage(ChatColor.GREEN + "Block reinforced.");
+                
             } else if (actualReinforcement != null && actualReinforcement.getStrength() == strength) {
                 player.sendMessage(ChatColor.AQUA + "Block already fully reinforced!");
             }

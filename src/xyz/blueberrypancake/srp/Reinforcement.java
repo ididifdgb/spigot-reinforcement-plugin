@@ -14,25 +14,28 @@ public class Reinforcement {
     private int z;
     private short strength;
     private short group_id;
-    private short dimension;
+    private byte material;
+    private byte dimension;
     
-    Reinforcement(Location loc, short strength, short group_id, short dimension) {
-        this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, dimension);
+    Reinforcement(Location loc, short strength, short group_id, byte material, byte dimension) {
+        this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, material, dimension);
     }
     
-    Reinforcement(int x, int y, int z, short dimension) {
+    Reinforcement(int x, int y, int z, byte material, byte dimension) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.material = material;
         this.dimension = dimension;
     }
 
-    Reinforcement(int x, int y, int z, short strength, short group_id, short dimension) {
+    Reinforcement(int x, int y, int z, short strength, short group_id, byte material, byte dimension) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.strength = strength;
         this.group_id = group_id;
+        this.material = material;
         this.dimension = dimension;
     }
 
@@ -60,23 +63,27 @@ public class Reinforcement {
         return this.group_id;
     }
     
-    public short getDimension() {
+    public byte getDimension() {
         return this.dimension;
+    }
+    
+    public byte getMaterial() {
+        return this.material;
     }
 
     public String toString() {
         return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ",dimension:" + this.dimension + ")";
     }
     
-    public static String getKey(int x, int y, int z, short dimension) {
+    public static String getKey(int x, int y, int z, byte dimension) {
         return x + "," + y + "," + z + "," + dimension;
     }
     
-    public static String getKey(Location location, short dimension) {
+    public static String getKey(Location location, byte dimension) {
         return Reinforcement.getKey(location.getBlockX(), location.getBlockY(), location.getBlockZ(), dimension);
     }
     
-    public static String getKey(Block block, short dimension) {
+    public static String getKey(Block block, byte dimension) {
         return Reinforcement.getKey(block.getLocation(), dimension);
     }
 
@@ -87,7 +94,8 @@ public class Reinforcement {
         bytes.putInt(this.z);
         bytes.putShort(this.strength);
         bytes.putShort(this.group_id);
-        bytes.putShort(this.dimension);
+        bytes.put(this.material);
+        bytes.put(this.dimension);
         return bytes.array();
     }
 }

@@ -88,7 +88,7 @@ public class SRPFile {
         // Could use reflection to get the exact size of the fields (?)
         for (int i = 0; i < this.bytes.length / Reinforcement.STRUCT_SIZE; i++) {
             // Add a reinforcement from the buffer
-            Reinforcement r = new Reinforcement(buffer.getInt(), buffer.getInt(), buffer.getInt(), buffer.getShort(), buffer.getShort(), buffer.getShort());
+            Reinforcement r = new Reinforcement(buffer.getInt(), buffer.getInt(), buffer.getInt(), buffer.getShort(), buffer.getShort(), buffer.get(), buffer.get());
             reinforcements.put(Reinforcement.getKey(r.getX(), r.getY(), r.getZ(), r.getDimension()), r);
         }
 
