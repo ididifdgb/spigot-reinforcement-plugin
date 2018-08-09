@@ -41,7 +41,7 @@ public class ReinforcementListener implements Listener {
     }
 
     private void initMaterialMap() {
-        matMap.put(Material.STONE, (short) 1);
+        matMap.put(Material.STONE, (short) 250);
         matMap.put(Material.IRON_INGOT, (short) 750);
         matMap.put(Material.DIAMOND, (short) 1800);
     }
@@ -81,7 +81,6 @@ public class ReinforcementListener implements Listener {
         if (ref != null) {
             ref.decreaseStrength();
             if (ref.getStrength() > 0) {
-                event.setCancelled(true);
                 if (player != null) {
                     player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
                 }
@@ -94,6 +93,7 @@ public class ReinforcementListener implements Listener {
                 refMap.remove(key);
             }
         }
+        event.setCancelled(true);
     }
     
     private Chest getChest(Block block) {
@@ -109,6 +109,7 @@ public class ReinforcementListener implements Listener {
         String key = Reinforcement.getKey(block, dimension);
         Reinforcement ref = refMap.get(key);
         
+        // If we can't find a reinforcement then this might be a double chest, check the other side
         if(ref == null) {
             Chest chest = getChest(block);
             boolean isDoubleChest = chest != null && chest.getType() != Type.SINGLE;
