@@ -21,12 +21,24 @@ import org.bukkit.inventory.ItemStack;
 public class ReinforcementListener implements Listener {
 
     private HashMap<String, Reinforcement> refMap;
-    private HashMap<Material, Short> matMap;
+    private HashMap<Material, MaterialData> matMap;
     
     private ReinforcementCommand command;
+    
+    class MaterialData {
+        Material material;
+        short strength;
+        byte id;
+        
+        MaterialData(Material material, short strength, byte id) {
+            this.material = material;
+            this.strength = strength;
+            this.id = id;
+        }
+    }
 
     ReinforcementListener(ReinforcementCommand command) {
-        this.matMap = new HashMap<Material, Short>();
+        this.matMap = new HashMap<Material, MaterialData>();
         this.command = command;
 
         this.initMaterialMap();
@@ -39,23 +51,23 @@ public class ReinforcementListener implements Listener {
     public HashMap<String, Reinforcement> getReinforcementMap() {
         return this.refMap;
     }
+    
+    private void insertMaterial(Material material, short strength, byte id) {
+        matMap.put(material, new MaterialData(material, strength, id));
+    }
 
     private void initMaterialMap() {
-        matMap.put(Material.STONE, (short) 250);
-        matMap.put(Material.IRON_INGOT, (short) 750);
-        matMap.put(Material.DIAMOND, (short) 1800);
+        insertMaterial(Material.STONE, (short) 250, (byte)1);
+        insertMaterial(Material.IRON_INGOT, (short) 750, (byte)2);
+        insertMaterial(Material.DIAMOND, (short) 1800, (byte) 3);
     }
     
     private Material getMaterialFromID(byte id) {
-        int i = 0;
-        for(Material m : matMap.keySet()) {
-            if((byte)i == id) {
-                return m;
+        for(MaterialData m : matMap.values()) {
+            if(m.id == id) {
+                return m.material;
             }
-            i++;
         }
-        
-        // lol?
         return null;
     }
 
@@ -92,8 +104,8 @@ public class ReinforcementListener implements Listener {
                 }
                 refMap.remove(key);
             }
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
     }
     
     private Chest getChest(Block block) {
@@ -189,13 +201,13 @@ public class ReinforcementListener implements Listener {
     
     // Reinforce a (single) block
     private void attemptReinforce(Reinforcement actualReinforcement, Block block, Player player, ItemStack held) {
-        Material m = held.getType();
-        short strength = matMap.getOrDefault(m, (short) -1);
-        if (strength > -1) {
+        Material material = held.getType();
+        MaterialData data = matMap.getOrDefault(material, null);
+        if (data != null) {
             // Reinforcement doesn't exist or it's weak
-            if (actualReinforcement == null || actualReinforcement.getStrength() < strength) {
+            if (actualReinforcement == null || actualReinforcement.getStrength() < data.strength) {
                 // Reinforce the single block
-                reinforce(block, strength, (byte) (m.ordinal() % matMap.size()), (byte) player.getWorld().getEnvironment().ordinal());
+                reinforce(block, data.strength, data.id, (byte) player.getWorld().getEnvironment().ordinal());
                 
                 // Use up the reinforcement material
                 held.setAmount(Math.max(0, held.getAmount() - 1));
@@ -203,7 +215,7 @@ public class ReinforcementListener implements Listener {
                 
                 player.sendMessage(ChatColor.GREEN + "Block reinforced.");
                 
-            } else if (actualReinforcement != null && actualReinforcement.getStrength() == strength) {
+            } else if (actualReinforcement != null && actualReinforcement.getStrength() == data.strength) {
                 player.sendMessage(ChatColor.AQUA + "Block already fully reinforced!");
             }
         }
