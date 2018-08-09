@@ -90,7 +90,7 @@ public class ReinforcementListener implements Listener {
                 if(material != null) {
                     player.getWorld().dropItem(block.getLocation(), new ItemStack(material));
                 }
-                refMap.remove(Reinforcement.getKey(block, dimension));
+                refMap.remove(ref.getKey());
             }
             event.setCancelled(true);
         }
@@ -184,7 +184,7 @@ public class ReinforcementListener implements Listener {
     
     private void reinforce(Block block, short strength, byte material, byte dimension) {
         Reinforcement newRef = new Reinforcement(block.getLocation(), strength, (short) 1, material, dimension); // wip: actual group ids
-        refMap.put(Reinforcement.getKey(block.getLocation(), newRef.getDimension()), newRef);        
+        refMap.put(newRef.getKey(), newRef);        
     }
     
     // Reinforce a (single) block
@@ -202,7 +202,6 @@ public class ReinforcementListener implements Listener {
                 player.getInventory().setItemInMainHand(held);
                 
                 player.sendMessage(ChatColor.GREEN + "Block reinforced.");
-                
             } else if (actualReinforcement != null && actualReinforcement.getStrength() == data.strength) {
                 player.sendMessage(ChatColor.AQUA + "Block already fully reinforced!");
             }
