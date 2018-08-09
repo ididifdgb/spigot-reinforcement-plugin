@@ -1,13 +1,9 @@
 package xyz.blueberrypancake.srp;
 
-import java.nio.ByteBuffer;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-public class Reinforcement {
-
-    public static final int STRUCT_SIZE = 18;
+public class Reinforcement implements Keyable {
 
     private int x;
     private int y;
@@ -74,6 +70,11 @@ public class Reinforcement {
     public String toString() {
         return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ",dimension:" + this.dimension + ")";
     }
+
+    @Override
+    public String getKey() {
+        return x + "," + y + "," + z + "," + dimension;
+    }
     
     public static String getKey(int x, int y, int z, byte dimension) {
         return x + "," + y + "," + z + "," + dimension;
@@ -85,17 +86,5 @@ public class Reinforcement {
     
     public static String getKey(Block block, byte dimension) {
         return Reinforcement.getKey(block.getLocation(), dimension);
-    }
-
-    public byte[] toBytes() {
-        ByteBuffer bytes = ByteBuffer.allocate(Reinforcement.STRUCT_SIZE);
-        bytes.putInt(this.x);
-        bytes.putInt(this.y);
-        bytes.putInt(this.z);
-        bytes.putShort(this.strength);
-        bytes.putShort(this.group_id);
-        bytes.put(this.material);
-        bytes.put(this.dimension);
-        return bytes.array();
     }
 }

@@ -25,18 +25,6 @@ public class ReinforcementListener implements Listener {
     
     private ReinforcementCommand command;
     
-    class MaterialData {
-        Material material;
-        short strength;
-        byte id;
-        
-        MaterialData(Material material, short strength, byte id) {
-            this.material = material;
-            this.strength = strength;
-            this.id = id;
-        }
-    }
-
     ReinforcementListener(ReinforcementCommand command) {
         this.matMap = new HashMap<Material, MaterialData>();
         this.command = command;
@@ -57,9 +45,10 @@ public class ReinforcementListener implements Listener {
     }
 
     private void initMaterialMap() {
-        insertMaterial(Material.STONE, (short) 250, (byte)1);
-        insertMaterial(Material.IRON_INGOT, (short) 750, (byte)2);
-        insertMaterial(Material.DIAMOND, (short) 1800, (byte) 3);
+        insertMaterial(Material.STONE, (short) 50, (byte)1);
+        insertMaterial(Material.IRON_INGOT, (short) 350, (byte)2);
+        insertMaterial(Material.OBSIDIAN, (short) 750, (byte) 3);
+        insertMaterial(Material.DIAMOND, (short) 1800, (byte) 4);
     }
     
     private Material getMaterialFromID(byte id) {
@@ -77,7 +66,6 @@ public class ReinforcementListener implements Listener {
         Player player = event.getPlayer();
         
         byte dimension = (byte) player.getWorld().getEnvironment().ordinal();
-        String key = Reinforcement.getKey(block, dimension);
         Reinforcement ref = getReinforcementAt(block, player, dimension);
 
         boolean mode = command.getReinforcementMode(player);
@@ -102,7 +90,7 @@ public class ReinforcementListener implements Listener {
                 if(material != null) {
                     player.getWorld().dropItem(block.getLocation(), new ItemStack(material));
                 }
-                refMap.remove(key);
+                refMap.remove(Reinforcement.getKey(block, dimension));
             }
             event.setCancelled(true);
         }
@@ -204,7 +192,7 @@ public class ReinforcementListener implements Listener {
         Material material = held.getType();
         MaterialData data = matMap.getOrDefault(material, null);
         if (data != null) {
-            // Reinforcement doesn't exist or it's weak
+            // Reinforcement doesn't exist or (it's weak and they own it)
             if (actualReinforcement == null || actualReinforcement.getStrength() < data.strength) {
                 // Reinforce the single block
                 reinforce(block, data.strength, data.id, (byte) player.getWorld().getEnvironment().ordinal());

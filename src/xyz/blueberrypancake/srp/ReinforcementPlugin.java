@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReinforcementPlugin extends JavaPlugin {
 
-    private SRPFile overworld = new SRPFile("reinforcements");
+    private SRPFile<Reinforcement> overworld = new SRPFile<Reinforcement>("reinforcements", new ReinforcementBufferable());
 
     private ReinforcementCommand command;
     private ReinforcementListener listener;
@@ -18,7 +18,7 @@ public class ReinforcementPlugin extends JavaPlugin {
             this.command = new ReinforcementCommand();
             this.listener = new ReinforcementListener(command);
             overworld.readFromDisk(); // Make sure we read our reinforcement data from disk first
-            listener.initReinforcementMap(overworld.getReinforcements()); // Get the map associated with the reinforcement data
+            listener.initReinforcementMap(overworld.getData()); // Get the map associated with the reinforcement data
             this.getCommand("reinforce").setExecutor(command);
             getServer().getPluginManager().registerEvents(listener, this);
         } catch (IOException e) {
@@ -28,6 +28,6 @@ public class ReinforcementPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        overworld.dumpReinforcements(new ArrayList<Reinforcement>(this.listener.getReinforcementMap().values())); // Dump the reinforcement data to disk
+        overworld.dumpData(new ArrayList<Reinforcement>(this.listener.getReinforcementMap().values())); // Dump the reinforcement data to disk
     }
 }
