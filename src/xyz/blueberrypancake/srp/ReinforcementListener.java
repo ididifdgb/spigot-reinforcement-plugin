@@ -79,8 +79,8 @@ public class ReinforcementListener implements Listener {
 
         // Attempt to damage the reinforcement
         if (ref != null) {
-            ref.decreaseStrength();
             if (ref.getStrength() > 0) {
+                ref.decreaseStrength();
                 if (player != null) {
                     player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
                 }

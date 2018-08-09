@@ -17,6 +17,5 @@ public abstract class ByteBufferable<T extends Keyable> {
     }
     
     abstract T fromBuffer(ByteBuffer buffer);
-    
     abstract byte[] toBytes();
 }
