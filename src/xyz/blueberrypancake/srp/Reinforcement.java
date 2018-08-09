@@ -3,6 +3,7 @@ package xyz.blueberrypancake.srp;
 import java.nio.ByteBuffer;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 public class Reinforcement {
 
@@ -67,9 +68,16 @@ public class Reinforcement {
         return "(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",group_id:" + this.group_id + "strength:" + this.strength + ",dimension:" + this.dimension + ")";
     }
     
-    // hash based on x,y,z,d instead of the full 6-tuple
-    public int hashCode() {
-        return  ("(x:" + this.x + ",y:" + this.y + ",z:" + this.z + ",dimension:" + this.dimension).hashCode();
+    public static String getKey(int x, int y, int z, short dimension) {
+        return x + "," + y + "," + z + "," + dimension;
+    }
+    
+    public static String getKey(Location location, short dimension) {
+        return Reinforcement.getKey(location.getBlockX(), location.getBlockY(), location.getBlockZ(), dimension);
+    }
+    
+    public static String getKey(Block block, short dimension) {
+        return Reinforcement.getKey(block.getLocation(), dimension);
     }
 
     public byte[] toBytes() {
