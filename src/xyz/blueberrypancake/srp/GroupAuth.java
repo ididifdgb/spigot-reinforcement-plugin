@@ -19,7 +19,7 @@ public class GroupAuth {
     public static short getGroupID(Player player) {
         ArrayList<PlayerGroup> groups = new ArrayList<PlayerGroup>(ReinforcementPlugin.getGroupMap().values());
         for(PlayerGroup group : groups) {
-            if(group.getUsername() == player.getDisplayName() && group.isOwner()) {
+            if(group.getUsername().equals(player.getDisplayName()) && group.isOwner()) {
                 return group.getID();
             }
         }
@@ -29,6 +29,6 @@ public class GroupAuth {
     // Authenticate the player (check to see if they're in the group, if not, add them)
     public static boolean authenticateUser(Player player, short groupID) {
         PlayerGroup group = ReinforcementPlugin.getGroupMap().get(groupID);
-        return group != null && group.getUsername() == player.getDisplayName();
+        return group != null && group.getUsername().equals(player.getDisplayName());
     }
 }

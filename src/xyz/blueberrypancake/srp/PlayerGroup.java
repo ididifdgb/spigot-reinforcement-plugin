@@ -35,7 +35,7 @@ public class PlayerGroup implements Keyable<Short> {
     }
     
     public boolean isOwner() {
-        return this.owner == 0;
+        return this.owner == (byte) 0;
     }
     
     public byte getOwner() {
