@@ -3,7 +3,7 @@ A Spigot Reinforcement Plugin for 1.13 inspired by Civcraft. You can reinforce a
 
 # How it works
 
-There are three levels of reinforcement: stone (250), iron (750), or diamond (1800). Type `/reinforce` to toggle reinforcement mode and left click to determine the remaining strength of the block being hit. Right clicking while holding one of the reinforcement materials in your main hand will reinforce a block instead.
+There are three levels of reinforcement: stone (50), iron (350), obsidian (750) or diamond (1800). Type `/reinforce` to toggle reinforcement mode and left click to determine the remaining strength of the block being hit. Right clicking while holding one of the reinforcement materials in your main hand will reinforce a block instead.
 
 Note that you cannot damage blocks while in reinforcement mode.
 
