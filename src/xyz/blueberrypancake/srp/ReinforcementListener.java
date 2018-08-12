@@ -54,11 +54,11 @@ public class ReinforcementListener implements Listener {
     }
 
     private short getNewID() {
-        try {
-            return (short) (Collections.max(new ArrayList<Short>(ReinforcementPlugin.getGroupMap().keySet())) + (short) 1);
-        } catch (Exception e) {
-            return (short) 0; // No elements exist, conversion error
+        ArrayList<Short> keys = new ArrayList<Short>(ReinforcementPlugin.getGroupMap().keySet());
+        if(keys.size() > 0) {
+            return (short) (Collections.max(keys) + 1);
         }
+        return (short) 0;
     }
     
     // Get the group ID of the Player from the Map
