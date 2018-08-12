@@ -30,6 +30,10 @@ public class PlayerGroup implements Keyable {
         return this.id;
     }
     
+    public static String getKey(short newID) {
+        return newID + "";
+    }
+    
     public boolean isOwner() {
         return this.owner == 0;
     }
@@ -40,6 +44,6 @@ public class PlayerGroup implements Keyable {
     
     @Override
     public String getKey() {
-        return this.toString();
+        return id + "";
     }
 }

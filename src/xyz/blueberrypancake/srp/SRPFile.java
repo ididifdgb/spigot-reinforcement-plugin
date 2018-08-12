@@ -15,8 +15,8 @@ public class SRPFile<T extends Keyable> extends DataFile {
     }
 
     // Get the data associated with this byte array as a HashMap
-    public HashMap<String, T> getData() {
-        HashMap<String, T> data = new HashMap<String, T>();
+    public <K> HashMap<K, T> getData() {
+        HashMap<K, T> data = new HashMap<K, T>();
 
         if (this.bytes.length <= 0) {
             return data;
@@ -34,9 +34,13 @@ public class SRPFile<T extends Keyable> extends DataFile {
 
         return data;
     }
+    
+    public <K> boolean dumpData(HashMap<K, T> data) {
+        return dumpData(new ArrayList<T>(data.values()));
+    }
 
     // Dump the data array (in memory) to bytes and write to disk
-    public boolean dumpData(ArrayList<T> data) {
+    private boolean dumpData(ArrayList<T> data) {
         int totalLength = 0;
         for (T item : data) {
             bufferable.instance = item;

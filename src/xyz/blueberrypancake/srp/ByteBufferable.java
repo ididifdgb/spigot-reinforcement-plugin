@@ -12,10 +12,6 @@ public abstract class ByteBufferable<T extends Keyable> {
         this.instance = instance;
     }
     
-    public String getKey() {
-        return instance.getKey();
-    }
-    
     abstract T fromBuffer(ByteBuffer buffer);
     abstract byte[] toBytes();
 }
