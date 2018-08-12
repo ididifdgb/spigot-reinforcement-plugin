@@ -1,5 +1,5 @@
 package xyz.blueberrypancake.srp;
 
-public interface Keyable {
-    <K> K getKey();
+public interface Keyable<K> {
+    K getKey();
 }

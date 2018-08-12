@@ -2,7 +2,7 @@ package xyz.blueberrypancake.srp;
 
 import java.nio.ByteBuffer;
 
-public class ReinforcementBufferable extends ByteBufferable<Reinforcement> {
+public class ReinforcementBufferable extends ByteBufferable<Reinforcement, String> {
 
     @Override
     public Reinforcement fromBuffer(ByteBuffer buffer) {

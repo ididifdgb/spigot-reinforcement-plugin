@@ -3,7 +3,7 @@ package xyz.blueberrypancake.srp;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-public class Reinforcement implements Keyable {
+public class Reinforcement implements Keyable<String> {
 
     private int x;
     private int y;

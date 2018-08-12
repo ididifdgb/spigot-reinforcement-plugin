@@ -1,6 +1,6 @@
 package xyz.blueberrypancake.srp;
 
-public class PlayerGroup implements Keyable {
+public class PlayerGroup implements Keyable<Short> {
     
     private short id;
     private byte owner;
@@ -43,7 +43,7 @@ public class PlayerGroup implements Keyable {
     }
     
     @Override
-    public String getKey() {
-        return id + "";
+    public Short getKey() {
+        return id;
     }
 }

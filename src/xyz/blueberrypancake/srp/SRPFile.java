@@ -5,17 +5,17 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SRPFile<T extends Keyable> extends DataFile {
+public class SRPFile<T extends Keyable<K>, K> extends DataFile {
 
-    private ByteBufferable<T> bufferable; // bufferable instance for mapping bytes to an object, and vice-versa
+    private ByteBufferable<T, K> bufferable; // bufferable instance for mapping bytes to an object, and vice-versa
     
-    SRPFile(String label, ByteBufferable<T> bufferable) {
+    SRPFile(String label, ByteBufferable<T, K> bufferable) {
         super(label, ".srp");
         this.bufferable = bufferable;
     }
 
     // Get the data associated with this byte array as a HashMap
-    public <K> HashMap<K, T> getData() {
+    public HashMap<K, T> getData() {
         HashMap<K, T> data = new HashMap<K, T>();
 
         if (this.bytes.length <= 0) {
@@ -35,7 +35,7 @@ public class SRPFile<T extends Keyable> extends DataFile {
         return data;
     }
     
-    public <K> boolean dumpData(HashMap<K, T> data) {
+    public boolean dumpData(HashMap<K, T> data) {
         return dumpData(new ArrayList<T>(data.values()));
     }
 

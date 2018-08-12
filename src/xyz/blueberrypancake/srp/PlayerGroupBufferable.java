@@ -2,7 +2,7 @@ package xyz.blueberrypancake.srp;
 
 import java.nio.ByteBuffer;
 
-public class PlayerGroupBufferable extends ByteBufferable<PlayerGroup> {
+public class PlayerGroupBufferable extends ByteBufferable<PlayerGroup, Short> {
 
     @Override
     public PlayerGroup fromBuffer(ByteBuffer buffer) {

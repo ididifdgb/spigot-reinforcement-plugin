@@ -2,7 +2,7 @@ package xyz.blueberrypancake.srp;
 
 import java.nio.ByteBuffer;
 
-public abstract class ByteBufferable<T extends Keyable> {
+public abstract class ByteBufferable<T extends Keyable<K>, K> {
 
     protected T instance;
     

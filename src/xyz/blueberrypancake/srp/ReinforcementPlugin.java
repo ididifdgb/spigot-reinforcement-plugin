@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReinforcementPlugin extends JavaPlugin {
 
-    private SRPFile<Reinforcement> overworld = new SRPFile<Reinforcement>("reinforcements", new ReinforcementBufferable());
-    private SRPFile<PlayerGroup> groups = new SRPFile<PlayerGroup>("groups", new PlayerGroupBufferable());
+    private SRPFile<Reinforcement, String> overworld = new SRPFile<Reinforcement, String>("reinforcements", new ReinforcementBufferable());
+    private SRPFile<PlayerGroup, Short> groups = new SRPFile<PlayerGroup, Short>("groups", new PlayerGroupBufferable());
 
     private ReinforcementCommand command;
     private ReinforcementListener listener;
