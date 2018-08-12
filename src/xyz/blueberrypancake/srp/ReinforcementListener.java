@@ -57,7 +57,7 @@ public class ReinforcementListener implements Listener {
         try {
             return (short) (Collections.max(new ArrayList<Short>(ReinforcementPlugin.getGroupMap().keySet())) + (short) 1);
         } catch (Exception e) {
-            return (short) 0;
+            return (short) 0; // No elements exist, conversion error
         }
     }
     
@@ -162,7 +162,6 @@ public class ReinforcementListener implements Listener {
 
             boolean mode = command.getReinforcementMode(player);
 
-            // Todo: if they're not the owner, cancel it, else allow and return
             if (mode) {
                 event.setCancelled(true);
             }
