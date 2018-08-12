@@ -1,7 +1,5 @@
 package xyz.blueberrypancake.srp;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -53,31 +51,6 @@ public class ReinforcementListener implements Listener {
         return null;
     }
 
-    private short getNewID() {
-        ArrayList<Short> keys = new ArrayList<Short>(ReinforcementPlugin.getGroupMap().keySet());
-        if(keys.size() > 0) {
-            return (short) (Collections.max(keys) + 1);
-        }
-        return (short) 0;
-    }
-    
-    // Get the group ID of the Player from the Map
-    private short getGroupID(Player player) {
-        ArrayList<PlayerGroup> groups = new ArrayList<PlayerGroup>(ReinforcementPlugin.getGroupMap().values());
-        for(PlayerGroup group : groups) {
-            if(group.getUsername() == player.getDisplayName() && group.isOwner()) {
-                return group.getID();
-            }
-        }
-        return -1;
-    }
-
-    // Authenticate the player (check to see if they're in the group, if not, add them)
-    private boolean authenticateUser(Player player, short groupID) {
-        PlayerGroup group = ReinforcementPlugin.getGroupMap().get(groupID);
-        return group != null && group.getUsername() == player.getDisplayName();
-    }
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
@@ -97,7 +70,7 @@ public class ReinforcementListener implements Listener {
 
         // Attempt to damage the reinforcement
         if (ref != null) {
-            if (ref.getStrength() > 0 && !authenticateUser(player, ref.getGroupID())) {
+            if (ref.getStrength() > 0 && !GroupAuth.authenticateUser(player, ref.getGroupID())) {
                 ref.decreaseStrength();
                 if (player != null) {
                     player.sendMessage(ChatColor.RED + block.getType().toString() + " is locked.");
@@ -187,7 +160,7 @@ public class ReinforcementListener implements Listener {
                         attemptReinforce(ref, block, player, held);
                     }
                 } else { // Interacting with the block, try to see if it's locked
-                    if (ref != null && !authenticateUser(player, ref.getGroupID())) {
+                    if (ref != null && !GroupAuth.authenticateUser(player, ref.getGroupID())) {
                         onLocked(event, player, block);
                     }
                 }
@@ -211,10 +184,10 @@ public class ReinforcementListener implements Listener {
         MaterialData data = matMap.getOrDefault(material, null);
         if (data != null) {
             // Reinforcement doesn't exist or (it's weak and they own it)
-            if (actualReinforcement == null || (actualReinforcement.getStrength() < data.strength && authenticateUser(player, actualReinforcement.getGroupID()))) {
-                short groupID = getGroupID(player);
+            if (actualReinforcement == null || (actualReinforcement.getStrength() < data.strength && GroupAuth.authenticateUser(player, actualReinforcement.getGroupID()))) {
+                short groupID = GroupAuth.getGroupID(player);
                 if (groupID < 0) { // User is not in a group
-                    groupID = getNewID(); // Max ID + 1 of existing ids
+                    groupID = GroupAuth.getNewID(); // Max ID + 1 of existing ids
                     ReinforcementPlugin.getGroupMap().put(groupID, new PlayerGroup(groupID, (byte) 0, player.getDisplayName()));
                 }
                 
