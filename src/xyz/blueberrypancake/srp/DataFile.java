@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-abstract class DataFile {
+public class DataFile {
 
     private String filename;
     protected File file;
