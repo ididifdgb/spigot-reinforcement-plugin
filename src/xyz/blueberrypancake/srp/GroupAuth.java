@@ -15,7 +15,7 @@ public class GroupAuth {
         return (short) 0;
     }
     
-    // Get the group ID of the Player from the Map
+    // Returns the group ID of the group the Player owns
     public static short getGroupID(Player player) {
         ArrayList<PlayerGroup> groups = new ArrayList<PlayerGroup>(ReinforcementPlugin.getGroupMap().values());
         for(PlayerGroup group : groups) {
