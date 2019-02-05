@@ -1,4 +1,4 @@
-package xyz.blueberrypancake.srp;
+package plugin.reinforcement.srp;
 
 public class PlayerGroup implements Keyable<Short> {
     

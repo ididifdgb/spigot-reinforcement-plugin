@@ -1,4 +1,4 @@
-package xyz.blueberrypancake.srp;
+package plugin.reinforcement.srp;
 
 import java.nio.ByteBuffer;
 

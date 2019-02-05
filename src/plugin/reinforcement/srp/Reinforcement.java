@@ -1,4 +1,4 @@
-package xyz.blueberrypancake.srp;
+package plugin.reinforcement.srp;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

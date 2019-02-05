@@ -1,4 +1,4 @@
-package xyz.blueberrypancake.srp;
+package plugin.reinforcement.srp;
 
 import java.util.ArrayList;
 import java.util.Collections;
