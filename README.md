@@ -14,8 +14,6 @@ Group data is encoded as a series of `[id owner? username_length username]` stru
 
 I did not use any databases at all since since it would have performed worse, and creating a basic file format to store block reinforcement data is all you need. At some point the server needs to load all the blocks into memory at once,	or store data according to chunk. 100,000 blocks reinforced only takes up 1.72mb of space so it'd take roughly 59.5 million blocks to take up a gigabyte. The main problem lies in the time it takes to load all this data off disk and into memory. I do not imagine that this many reinforcements will exist.
 
-I'm not so sure that each Reinforcement object loaded in from memory is in fact 18 bytes, but we'll have to make do.. :(
-
 # Usage
 
 Simply export the code in your favorite IDE as a `.jar` file.
