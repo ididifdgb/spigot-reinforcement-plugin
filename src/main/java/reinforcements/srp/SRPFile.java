@@ -1,15 +1,17 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import reinforcements.interfaces.Keyable;
+
 public class SRPFile<T extends Keyable<K>, K> extends DataFile {
 
     private ByteBufferable<T, K> bufferable; // bufferable instance for mapping bytes to an object, and vice-versa
     
-    SRPFile(String label, ByteBufferable<T, K> bufferable) {
+    public SRPFile(String label, ByteBufferable<T, K> bufferable) {
         super(label, ".srp");
         this.bufferable = bufferable;
     }

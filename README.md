@@ -1,5 +1,5 @@
 # Spigot Reinforcement Plugin
-A Spigot Reinforcement Plugin for 1.13. You can reinforce after enabling the mode using `/reinforce` and right clicking on the blocks.
+A Spigot Reinforcement Plugin for 1.14.x. You can reinforce after enabling the mode using `/reinforce` and right clicking on the blocks.
 
 # How it works
 
@@ -16,4 +16,4 @@ I did not use any databases at all since since it would have performed worse, an
 
 # Usage
 
-Simply export the code in your favorite IDE as a `.jar` file.
+Build the jar using `gradle build` (or `./gradlew build`) then move the built jar from `build/jars/reinforcements-1.0-SNAPSHOT` to your server's `plugins/` directory.

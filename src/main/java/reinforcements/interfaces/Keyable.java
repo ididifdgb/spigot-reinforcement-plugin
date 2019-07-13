@@ -1,4 +1,4 @@
-package plugin.reinforcement.srp;
+package reinforcements.interfaces;
 
 public interface Keyable<K> {
     K getKey();

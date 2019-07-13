@@ -1,9 +1,11 @@
-package plugin.reinforcement.srp;
+package reinforcements;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.bukkit.entity.Player;
+
+import reinforcements.srp.types.PlayerGroup;
 
 public class GroupAuth {
 

@@ -1,9 +1,15 @@
-package plugin.reinforcement.srp;
+package reinforcements;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
+import reinforcements.srp.PlayerGroupBufferable;
+import reinforcements.srp.ReinforcementBufferable;
+import reinforcements.srp.SRPFile;
+import reinforcements.srp.types.PlayerGroup;
+import reinforcements.srp.types.Reinforcement;
 
 public class ReinforcementPlugin extends JavaPlugin {
 

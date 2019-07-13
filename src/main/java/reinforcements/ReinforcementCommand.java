@@ -1,4 +1,4 @@
-package plugin.reinforcement.srp;
+package reinforcements;
 
 import java.util.HashMap;
 

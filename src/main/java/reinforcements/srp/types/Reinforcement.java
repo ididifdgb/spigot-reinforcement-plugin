@@ -1,7 +1,9 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp.types;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+
+import reinforcements.interfaces.Keyable;
 
 public class Reinforcement implements Keyable<String> {
 
@@ -13,11 +15,11 @@ public class Reinforcement implements Keyable<String> {
     private byte material;
     private byte dimension;
     
-    Reinforcement(Location loc, short strength, short group_id, byte material, byte dimension) {
+    public Reinforcement(Location loc, short strength, short group_id, byte material, byte dimension) {
         this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, material, dimension);
     }
     
-    Reinforcement(int x, int y, int z, byte material, byte dimension) {
+    public Reinforcement(int x, int y, int z, byte material, byte dimension) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -25,7 +27,7 @@ public class Reinforcement implements Keyable<String> {
         this.dimension = dimension;
     }
 
-    Reinforcement(int x, int y, int z, short strength, short group_id, byte material, byte dimension) {
+    public Reinforcement(int x, int y, int z, short strength, short group_id, byte material, byte dimension) {
         this.x = x;
         this.y = y;
         this.z = z;

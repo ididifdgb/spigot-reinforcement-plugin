@@ -1,6 +1,9 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp;
 
 import java.nio.ByteBuffer;
+
+import reinforcements.srp.types.Reinforcement;
+import reinforcements.srp.ByteBufferable;
 
 public class ReinforcementBufferable extends ByteBufferable<Reinforcement, String> {
 

@@ -1,4 +1,4 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp;
 
 import java.io.File;
 import java.io.FileInputStream;

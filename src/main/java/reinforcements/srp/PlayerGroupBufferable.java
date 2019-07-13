@@ -1,6 +1,8 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp;
 
 import java.nio.ByteBuffer;
+
+import reinforcements.srp.types.PlayerGroup;
 
 public class PlayerGroupBufferable extends ByteBufferable<PlayerGroup, Short> {
 

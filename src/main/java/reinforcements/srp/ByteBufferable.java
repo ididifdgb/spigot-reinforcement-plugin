@@ -1,6 +1,8 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp;
 
 import java.nio.ByteBuffer;
+
+import reinforcements.interfaces.Keyable;
 
 public abstract class ByteBufferable<T extends Keyable<K>, K> {
 

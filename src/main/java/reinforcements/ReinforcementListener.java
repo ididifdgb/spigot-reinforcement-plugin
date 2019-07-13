@@ -1,4 +1,4 @@
-package plugin.reinforcement.srp;
+package reinforcements;
 
 import java.util.HashMap;
 
@@ -17,6 +17,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+
+import reinforcements.srp.types.MaterialData;
+import reinforcements.srp.types.PlayerGroup;
+import reinforcements.srp.types.Reinforcement;
 
 public class ReinforcementListener implements Listener {
 

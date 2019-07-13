@@ -1,4 +1,6 @@
-package plugin.reinforcement.srp;
+package reinforcements.srp.types;
+
+import reinforcements.interfaces.Keyable;
 
 public class PlayerGroup implements Keyable<Short> {
     
@@ -8,13 +10,13 @@ public class PlayerGroup implements Keyable<Short> {
     
     PlayerGroup() { }
     
-    PlayerGroup(short id, byte owner, String username) {
+    public PlayerGroup(short id, byte owner, String username) {
         this.id = id;
         this.owner = owner;
         this.username = username;
     }
     
-    PlayerGroup(short id, String username) {
+    public PlayerGroup(short id, String username) {
         this(id, (byte) 1, username); // assume user is not the owner
     }
     
