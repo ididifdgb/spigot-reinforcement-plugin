@@ -15,7 +15,7 @@ public class Reinforcement implements Keyable<String> {
     private byte material;
     private byte dimension;
     
-    public Reinforcement(Location loc, short strength, short group_id, byte material, byte dimension) {
+    Reinforcement(Location loc, short strength, short group_id, byte material, byte dimension) {
         this((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), strength, group_id, material, dimension);
     }
     

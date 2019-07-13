@@ -10,7 +10,7 @@ public class PlayerGroup implements Keyable<Short> {
     
     PlayerGroup() { }
     
-    public PlayerGroup(short id, byte owner, String username) {
+    PlayerGroup(short id, byte owner, String username) {
         this.id = id;
         this.owner = owner;
         this.username = username;

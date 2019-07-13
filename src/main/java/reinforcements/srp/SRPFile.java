@@ -11,7 +11,7 @@ public class SRPFile<T extends Keyable<K>, K> extends DataFile {
 
     private ByteBufferable<T, K> bufferable; // bufferable instance for mapping bytes to an object, and vice-versa
     
-    public SRPFile(String label, ByteBufferable<T, K> bufferable) {
+    SRPFile(String label, ByteBufferable<T, K> bufferable) {
         super(label, ".srp");
         this.bufferable = bufferable;
     }
