@@ -1,5 +1,5 @@
 # Spigot Reinforcement Plugin
-A Spigot Reinforcement Plugin for 1.14.x. You can reinforce after enabling the mode using `/reinforce` and right clicking on the blocks.
+A Spigot Reinforcement Plugin for reinforcing blocks with levels of protection using in-game materials. You can reinforce after enabling the mode using `/reinforce` and right clicking on the blocks.
 
 # How it works
 
@@ -13,6 +13,11 @@ The `.srpdata` file for reinforcements is structured as a series of `[x y z stre
 Group data is encoded as a series of `[id owner? username_length username]` structs.
 
 I did not use any databases at all since since it would have performed worse, and creating a basic file format to store block reinforcement data is all you need. At some point the server needs to load all the blocks into memory at once,	or store data according to chunk. 100,000 blocks reinforced only takes up 1.72mb of space so it'd take roughly 59.5 million blocks to take up a gigabyte. The main problem lies in the time it takes to load all this data off disk and into memory. I do not imagine that this many reinforcements will exist.
+
+# Which version?
+
+I haven't tested, but this should work fine with `1.10-1.14` just modify the dependency in `build.gradle` and then
+rebuild.
 
 # Usage
 
